@@ -1,4 +1,4 @@
-var request = require('request')
+const https = require('https')
 var events = require('events')
 var url = require('url')
 var crypto = require('crypto')
@@ -41,6 +41,7 @@ module.exports = function(opts) {
   function callback(req, resp, cb) {
     var query = url.parse(req.url, true).query
     var code = query.code
+    var body = ""
     if (!code) return emitter.emit('error', {error: 'missing oauth code'}, resp)
     var u = 'https://github.com/login/oauth/access_token'
        + '?client_id=' + opts.githubClient
@@ -48,20 +49,31 @@ module.exports = function(opts) {
        + '&code=' + code
        + '&state=' + state
        ;
-    request.get({url:u, json: true}, function (err, tokenResp, body) {
-      if (err) {
+    https.get(u, (res) => {
+
+      res.setEncoding('utf8');
+      
+      res.on('data', (d) => {
+        body += d
+      });
+
+      res.on('end', () => {
+        JSON.parse(body);
         if (cb) {
-          err.body = body
-          err.tokenResp = tokenResp
-          return cb(err)
+          cb(null, body)
         }
-        return emitter.emit('error', body, err, resp, tokenResp, req)
-      }
+        emitter.emit('token', body, resp, tokenResp, req)
+      });
+    
+    }).on('error', (e) => {
+      console.error(e);
       if (cb) {
-        cb(null, body)
+        e.body = body
+        e.tokenResp = tokenResp
+        return cb(err)
       }
-      emitter.emit('token', body, resp, tokenResp, req)
-    })
+      return emitter.emit('error', body, e, resp, tokenResp, req)
+    });
   }
   
   emitter.login = login

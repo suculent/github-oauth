@@ -1,25 +1,21 @@
 {
   "name": "github-oauth",
-  "description": "simple functions for doing oauth login with github",
+  "description": "simple functions for doing oauth login with github migrated to https from deprecated request",
   "keywords": [
     "github",
     "oauth"
   ],
-  "version": "0.2.2",
+  "version": "0.2.3",
   "repository": {
     "type": "git",
-    "url": "git://github.com/maxogden/github-oauth.git"
+    "url": "git://github.com/suculent/github-oauth.git"
   },
   "author": "max ogden <max@maxogden.com>",
-  "dependencies": {
-    "request": "2.12.0"
-  },
   "bugs": {
-    "url": "https://github.com/maxogden/github-oauth/issues"
+    "url": "https://github.com/suculent/github-oauth/issues"
   },
-  "homepage": "https://github.com/maxogden/github-oauth",
+  "homepage": "https://github.com/suculent/github-oauth",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
